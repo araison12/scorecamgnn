@@ -3,15 +3,15 @@ Here is the an example code for using ScoreCAM GNN from the [ScoreCAM GNN : a ge
 ```python
 from torch_geometric.datasets import TUDataset
 
-    dataset = TUDataset(root="/tmp/ENZYMES", name="ENZYMES")
-    data = dataset[0]
-    from scgnn.scgnn import SCGNN
+dataset = TUDataset(root="/tmp/ENZYMES", name="ENZYMES")
+data = dataset[0]
+from scgnn.scgnn import SCGNN
 
-    import torch.nn.functional as F
-    from torch_geometric.nn import GCNConv, global_mean_pool
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv, global_mean_pool
 
 
-    model = Sequential(
+model = Sequential(
         "data",
         [
             (
@@ -22,15 +22,15 @@ from torch_geometric.datasets import TUDataset
             (GCNConv(64, dataset.num_classes), "x, edge_index -> x"),
             (global_mean_pool, "x, batch -> x"),
         ],
-    )
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = model.to(device)
-    data = dataset[0].to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
-    model.eval()
-    out = model(data)
-    explainer = SCGNN()
-    explained = explainer.forward(
+        )
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
+data = dataset[0].to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+model.eval()
+out = model(data)
+explainer = SCGNN()
+explained = explainer.forward(
         model,
         data.x,
         data.edge_index,
